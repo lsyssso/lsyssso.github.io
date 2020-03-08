@@ -42,7 +42,8 @@
             // Create the final object to add to the scene
             var splineObject;
 
-
+            //create a synth and connect it to the master output (your speakers)
+            var synth = new Tone.Synth().toMaster()
             
 
             function onMouseMove(event){
@@ -76,8 +77,7 @@
             }
 
             function playTone(y){
-                //create a synth and connect it to the master output (your speakers)
-                var synth = new Tone.Synth().toMaster()
+                
 
                 
                 synth.triggerAttackRelease(height / 2 + y, '13n')
