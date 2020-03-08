@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>My first three.js app</title>
+		<title>Draw your melody</title>
 		<style>
 			body { margin: 0; }
 			canvas { display: block; }
@@ -79,8 +79,8 @@
                 //create a synth and connect it to the master output (your speakers)
                 var synth = new Tone.Synth().toMaster()
 
-                //play a middle 'C' for the duration of an 8th note
-                synth.triggerAttackRelease(Math.abs(y)+200, '8n')
+                
+                synth.triggerAttackRelease(Math.abs(y) * 1.5 + 200, '13n')
             }
 
             function playMelody(index){
