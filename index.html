@@ -80,7 +80,7 @@
                 var synth = new Tone.Synth().toMaster()
 
                 
-                synth.triggerAttackRelease(Math.abs(y) * 1.5 + 200, '13n')
+                synth.triggerAttackRelease(height / 2 + y, '13n')
             }
 
             function playMelody(index){
