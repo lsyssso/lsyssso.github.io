@@ -32,8 +32,6 @@
             var scene = new THREE.Scene();
             var mouse = new THREE.Vector2();
 
-            var curve;
-
             var points;
             var geometry;
 
@@ -43,7 +41,20 @@
             var splineObject;
 
             //create a synth and connect it to the master output (your speakers)
-            var synth = new Tone.Synth().toMaster()
+            var synth = new Tone.Synth({
+                oscillator : {
+                type : 'sine'
+                } ,
+                envelope : {
+                attack : 0.01 ,
+                decay : 2 ,
+                sustain : 0.1 ,
+                release : 1.2,
+                attackCurve: 'linear',
+                decayCurve: 'exponential',
+                releaseCurve:'exponential'
+                }
+            }).toMaster()
             
 
             function onMouseMove(event){
@@ -76,20 +87,36 @@
                 playMelody(0);
             }
 
-            function playTone(y){
+            function measureDistance(p1, p2){
+                try{
+                    let squareX = (p2.x - p1.x) * (p2.x - p1.x);
+                let squareY = (p2.y - p1.y) * (p2.y - p1.y);
+                return Math.sqrt(squareX + squareY);
+                }
+                catch{
+                    return 100;
+                }
                 
+            }
 
-                
-                synth.triggerAttackRelease(height / 2 + y, '13n')
+            function playTone(p){
+                let xRatio = ((width / 2 + p.x) / width)
+                //console.log(xRatio)
+                synth.envelope.release = xRatio;
+                synth.triggerAttackRelease(height / 2 + p.y + 20, '8n')
             }
 
             function playMelody(index){
+                let distance = 250;
                 if(index > 0){
                         scene.children[index - 1].material.color.setHex( 0xffffff );
                     }
                 if(!isMouseDown && vectors[index] != null){
                     //console.log(vectors[index]);
-                    playTone(scene.children[index].position.y);
+                    if(index < vectors.length - 1){
+                        distance += measureDistance(vectors[index], vectors[index+1]);
+                    }
+                    playTone(scene.children[index].position);
                     scene.children[index].material.color.setHex( 0xffff00 );
                 }
                 else{
@@ -98,7 +125,7 @@
 
                 setTimeout(()=>{
                     playMelody(index + 1);
-                }, 200);
+                }, distance);
             }
             
             loop = setInterval(() => {
